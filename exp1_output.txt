@@ -1,0 +1,677 @@
+SRIT R23 | Database Management Systems Lab
+Experiment 1 : Execution and Output (Oracle Database 21c XE, SQL*Plus)
+
+
+======================================================================
+EXPERIMENT 1a : SQL DDL commands (tables WITHOUT constraints)
+======================================================================
+
+
+-- 1a-1. Create the tables of the database without constraints
+
+SQL> CREATE TABLE student (
+  2    name           VARCHAR2(20),
+  3    student_number NUMBER(3),
+  4    class          NUMBER(1),
+  5    major          VARCHAR2(10)
+  6  );
+Table created.
+
+SQL> CREATE TABLE course (
+  2    course_name   VARCHAR2(30),
+  3    course_number VARCHAR2(15),
+  4    credit_hours  NUMBER(2),
+  5    department    VARCHAR2(15)
+  6  );
+Table created.
+
+SQL> CREATE TABLE section (
+  2    section_identifier NUMBER(4),
+  3    course_number      VARCHAR2(15),
+  4    semester           VARCHAR2(10),
+  5    year               VARCHAR2(4),
+  6    instructor         VARCHAR2(15)
+  7  );
+Table created.
+
+SQL> CREATE TABLE grade_report (
+  2    student_number     NUMBER(3),
+  3    section_identifier NUMBER(4),
+  4    grade              VARCHAR2(5)
+  5  );
+Table created.
+
+SQL> CREATE TABLE prerequisite (
+  2    course_number       VARCHAR2(15),
+  3    prerequisite_number VARCHAR2(20)
+  4  );
+Table created.
+
+
+-- 1a-2. Insert all values into the tables
+
+SQL> INSERT INTO student VALUES ('Smith', 17, 1, 'CS');
+1 row created.
+
+SQL> INSERT INTO student VALUES ('Brown', 8, 2, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Intro to Computer Science', 'CS1310', 4, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Data Structures', 'CS3320', 4, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Discrete Mathematics', 'MATH2410', 3, 'MATH');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Database', 'CS3380', 3, 'CS');
+1 row created.
+
+SQL> INSERT INTO section VALUES (85, 'MATH2410', 'Fall', '07', 'King');
+1 row created.
+
+SQL> INSERT INTO section VALUES (92, 'CS1310', 'Fall', '07', 'Anderson');
+1 row created.
+
+SQL> INSERT INTO section VALUES (102, 'CS3320', 'Spring', '08', 'Knuth');
+1 row created.
+
+SQL> INSERT INTO section VALUES (112, 'MATH2410', 'Fall', '08', 'Chang');
+1 row created.
+
+SQL> INSERT INTO section VALUES (119, 'CS1310', 'Fall', '08', 'Anderson');
+1 row created.
+
+SQL> INSERT INTO section VALUES (135, 'CS3380', 'Fall', '08', 'Stone');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (17, 112, 'B');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (17, 119, 'C');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 85, 'A');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 92, 'A');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 102, 'B');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 135, 'A');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3380', 'CS3320');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3380', 'MATH2410');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3320', 'CS1310');
+1 row created.
+
+SQL> COMMIT;
+Commit complete.
+
+
+-- 1a-3. Describe all tables
+
+SQL> DESC student;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(20)
+ STUDENT_NUMBER                                     NUMBER(3)
+ CLASS                                              NUMBER(1)
+ MAJOR                                              VARCHAR2(10)
+
+SQL> DESC course;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COURSE_NAME                                        VARCHAR2(30)
+ COURSE_NUMBER                                      VARCHAR2(15)
+ CREDIT_HOURS                                       NUMBER(2)
+ DEPARTMENT                                         VARCHAR2(15)
+
+SQL> DESC section;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SECTION_IDENTIFIER                                 NUMBER(4)
+ COURSE_NUMBER                                      VARCHAR2(15)
+ SEMESTER                                           VARCHAR2(10)
+ YEAR                                               VARCHAR2(4)
+ INSTRUCTOR                                         VARCHAR2(15)
+
+SQL> DESC grade_report;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ STUDENT_NUMBER                                     NUMBER(3)
+ SECTION_IDENTIFIER                                 NUMBER(4)
+ GRADE                                              VARCHAR2(5)
+
+SQL> DESC prerequisite;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COURSE_NUMBER                                      VARCHAR2(15)
+ PREREQUISITE_NUMBER                                VARCHAR2(20)
+
+
+-- 1a-4. List the created tables
+
+SQL> SELECT table_name FROM user_tables ORDER BY table_name;
+
+TABLE_NAME
+--------------------------------------------------
+COURSE
+GRADE_REPORT
+PREREQUISITE
+SECTION
+STUDENT
+
+5 rows selected.
+
+
+-- 1a-5. Display the values of each table
+
+SQL> SELECT * FROM student;
+
+NAME                 STUDENT_NUMBER CLASS MAJOR
+-------------------- -------------- ----- ----------
+Smith                            17     1 CS
+Brown                             8     2 CS
+
+2 rows selected.
+
+SQL> SELECT * FROM course;
+
+COURSE_NAME                    COURSE_NUMBER   CREDIT_HOURS DEPARTMENT
+------------------------------ --------------- ------------ ---------------
+Intro to Computer Science      CS1310                     4 CS
+Data Structures                CS3320                     4 CS
+Discrete Mathematics           MATH2410                   3 MATH
+Database                       CS3380                     3 CS
+
+4 rows selected.
+
+SQL> SELECT * FROM section;
+
+SECTION_IDENTIFIER COURSE_NUMBER   SEMESTER   YEAR INSTRUCTOR
+------------------ --------------- ---------- ---- ---------------
+                85 MATH2410        Fall       07   King
+                92 CS1310          Fall       07   Anderson
+               102 CS3320          Spring     08   Knuth
+               112 MATH2410        Fall       08   Chang
+               119 CS1310          Fall       08   Anderson
+               135 CS3380          Fall       08   Stone
+
+6 rows selected.
+
+SQL> SELECT * FROM grade_report;
+
+STUDENT_NUMBER SECTION_IDENTIFIER GRADE
+-------------- ------------------ -----
+            17                112 B
+            17                119 C
+             8                 85 A
+             8                 92 A
+             8                102 B
+             8                135 A
+
+6 rows selected.
+
+SQL> SELECT * FROM prerequisite;
+
+COURSE_NUMBER   PREREQUISITE_NUMBER
+--------------- --------------------
+CS3380          CS3320
+CS3380          MATH2410
+CS3320          CS1310
+
+3 rows selected.
+
+
+-- 1a-6. Delete all tables
+
+SQL> DROP TABLE grade_report PURGE;
+Table dropped.
+
+SQL> DROP TABLE prerequisite PURGE;
+Table dropped.
+
+SQL> DROP TABLE section PURGE;
+Table dropped.
+
+SQL> DROP TABLE course PURGE;
+Table dropped.
+
+SQL> DROP TABLE student PURGE;
+Table dropped.
+
+
+======================================================================
+EXPERIMENT 1b : SQL DML commands (tables WITH constraints)
+======================================================================
+
+
+-- 1b-1. Implement the tables using the given constraints
+
+SQL> CREATE TABLE student (
+  2    name           VARCHAR2(20),
+  3    student_number NUMBER(3),
+  4    class          NUMBER(1),
+  5    major          VARCHAR2(10) NOT NULL,
+  6    CONSTRAINT pk_student PRIMARY KEY (student_number)
+  7  );
+Table created.
+
+SQL> CREATE TABLE course (
+  2    course_name   VARCHAR2(30),
+  3    course_number VARCHAR2(15),
+  4    credit_hours  NUMBER(2) NOT NULL,
+  5    department    VARCHAR2(15),
+  6    CONSTRAINT pk_course PRIMARY KEY (course_number)
+  7  );
+Table created.
+
+SQL> CREATE TABLE section (
+  2    section_identifier NUMBER(4),
+  3    course_number      VARCHAR2(15),
+  4    semester           VARCHAR2(10) NOT NULL,
+  5    year               VARCHAR2(4),
+  6    instructor         VARCHAR2(15),
+  7    CONSTRAINT pk_section PRIMARY KEY (section_identifier)
+  8  );
+Table created.
+
+SQL> CREATE TABLE grade_report (
+  2    student_number     NUMBER(3),
+  3    section_identifier NUMBER(4),
+  4    grade              VARCHAR2(5) NOT NULL,
+  5    CONSTRAINT pk_grade_report PRIMARY KEY (student_number, section_identifier),
+  6    CONSTRAINT fk_gr_student FOREIGN KEY (student_number)
+  7      REFERENCES student(student_number) ON DELETE CASCADE,
+  8    CONSTRAINT fk_gr_section FOREIGN KEY (section_identifier)
+  9      REFERENCES section(section_identifier) ON DELETE CASCADE
+ 10  );
+Table created.
+
+SQL> CREATE TABLE prerequisite (
+  2    course_number       VARCHAR2(15),
+  3    prerequisite_number VARCHAR2(20),
+  4    CONSTRAINT pk_prerequisite PRIMARY KEY (course_number, prerequisite_number),
+  5    CONSTRAINT fk_prereq_course FOREIGN KEY (course_number)
+  6      REFERENCES course(course_number) ON DELETE CASCADE
+  7  );
+Table created.
+
+
+-- 1b-2. Display the description of each table
+
+SQL> DESC student;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(20)
+ STUDENT_NUMBER                            NOT NULL NUMBER(3)
+ CLASS                                              NUMBER(1)
+ MAJOR                                     NOT NULL VARCHAR2(10)
+
+SQL> DESC course;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COURSE_NAME                                        VARCHAR2(30)
+ COURSE_NUMBER                             NOT NULL VARCHAR2(15)
+ CREDIT_HOURS                              NOT NULL NUMBER(2)
+ DEPARTMENT                                         VARCHAR2(15)
+
+SQL> DESC section;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SECTION_IDENTIFIER                        NOT NULL NUMBER(4)
+ COURSE_NUMBER                                      VARCHAR2(15)
+ SEMESTER                                  NOT NULL VARCHAR2(10)
+ YEAR                                               VARCHAR2(4)
+ INSTRUCTOR                                         VARCHAR2(15)
+
+SQL> DESC grade_report;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ STUDENT_NUMBER                            NOT NULL NUMBER(3)
+ SECTION_IDENTIFIER                        NOT NULL NUMBER(4)
+ GRADE                                     NOT NULL VARCHAR2(5)
+
+SQL> DESC prerequisite;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COURSE_NUMBER                             NOT NULL VARCHAR2(15)
+ PREREQUISITE_NUMBER                       NOT NULL VARCHAR2(20)
+
+
+-- 1b-3. Insert the values of the database
+
+SQL> INSERT INTO student VALUES ('Smith', 17, 1, 'CS');
+1 row created.
+
+SQL> INSERT INTO student VALUES ('Brown', 8, 2, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Intro to Computer Science', 'CS1310', 4, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Data Structures', 'CS3320', 4, 'CS');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Discrete Mathematics', 'MATH2410', 3, 'MATH');
+1 row created.
+
+SQL> INSERT INTO course VALUES ('Database', 'CS3380', 3, 'CS');
+1 row created.
+
+SQL> INSERT INTO section VALUES (85, 'MATH2410', 'Fall', '07', 'King');
+1 row created.
+
+SQL> INSERT INTO section VALUES (92, 'CS1310', 'Fall', '07', 'Anderson');
+1 row created.
+
+SQL> INSERT INTO section VALUES (102, 'CS3320', 'Spring', '08', 'Knuth');
+1 row created.
+
+SQL> INSERT INTO section VALUES (112, 'MATH2410', 'Fall', '08', 'Chang');
+1 row created.
+
+SQL> INSERT INTO section VALUES (119, 'CS1310', 'Fall', '08', 'Anderson');
+1 row created.
+
+SQL> INSERT INTO section VALUES (135, 'CS3380', 'Fall', '08', 'Stone');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (17, 112, 'B');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (17, 119, 'C');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 85, 'A');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 92, 'A');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 102, 'B');
+1 row created.
+
+SQL> INSERT INTO grade_report VALUES (8, 135, 'A');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3380', 'CS3320');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3380', 'MATH2410');
+1 row created.
+
+SQL> INSERT INTO prerequisite VALUES ('CS3320', 'CS1310');
+1 row created.
+
+SQL> COMMIT;
+Commit complete.
+
+
+-- 1b-4. Display the instances of each table
+
+SQL> SELECT * FROM student;
+
+NAME                 STUDENT_NUMBER CLASS MAJOR
+-------------------- -------------- ----- ----------
+Smith                            17     1 CS
+Brown                             8     2 CS
+
+2 rows selected.
+
+SQL> SELECT * FROM course;
+
+COURSE_NAME                    COURSE_NUMBER   CREDIT_HOURS DEPARTMENT
+------------------------------ --------------- ------------ ---------------
+Intro to Computer Science      CS1310                     4 CS
+Data Structures                CS3320                     4 CS
+Discrete Mathematics           MATH2410                   3 MATH
+Database                       CS3380                     3 CS
+
+4 rows selected.
+
+SQL> SELECT * FROM section;
+
+SECTION_IDENTIFIER COURSE_NUMBER   SEMESTER   YEAR INSTRUCTOR
+------------------ --------------- ---------- ---- ---------------
+                85 MATH2410        Fall       07   King
+                92 CS1310          Fall       07   Anderson
+               102 CS3320          Spring     08   Knuth
+               112 MATH2410        Fall       08   Chang
+               119 CS1310          Fall       08   Anderson
+               135 CS3380          Fall       08   Stone
+
+6 rows selected.
+
+SQL> SELECT * FROM grade_report;
+
+STUDENT_NUMBER SECTION_IDENTIFIER GRADE
+-------------- ------------------ -----
+            17                112 B
+            17                119 C
+             8                 85 A
+             8                 92 A
+             8                102 B
+             8                135 A
+
+6 rows selected.
+
+SQL> SELECT * FROM prerequisite;
+
+COURSE_NUMBER   PREREQUISITE_NUMBER
+--------------- --------------------
+CS3380          CS3320
+CS3380          MATH2410
+CS3320          CS1310
+
+3 rows selected.
+
+
+-- 1b-5. Add a branch attribute to student and describe the table
+
+SQL> ALTER TABLE student ADD branch VARCHAR2(10);
+Table altered.
+
+SQL> DESC student;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(20)
+ STUDENT_NUMBER                            NOT NULL NUMBER(3)
+ CLASS                                              NUMBER(1)
+ MAJOR                                     NOT NULL VARCHAR2(10)
+ BRANCH                                             VARCHAR2(10)
+
+
+-- 1b-6. Copy major values into branch and display it
+
+SQL> UPDATE student SET branch = major;
+2 rows updated.
+
+SQL> SELECT * FROM student;
+
+NAME                 STUDENT_NUMBER CLASS MAJOR      BRANCH
+-------------------- -------------- ----- ---------- ----------
+Smith                            17     1 CS         CS
+Brown                             8     2 CS         CS
+
+2 rows selected.
+
+
+-- 1b-7. Remove the major attribute from student
+
+SQL> ALTER TABLE student DROP COLUMN major;
+Table altered.
+
+SQL> DESC student;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(20)
+ STUDENT_NUMBER                            NOT NULL NUMBER(3)
+ CLASS                                              NUMBER(1)
+ BRANCH                                             VARCHAR2(10)
+
+
+-- 1b-8. Rename course_number to cid in course and describe it
+
+SQL> ALTER TABLE course RENAME COLUMN course_number TO cid;
+Table altered.
+
+SQL> DESC course;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COURSE_NAME                                        VARCHAR2(30)
+ CID                                       NOT NULL VARCHAR2(15)
+ CREDIT_HOURS                              NOT NULL NUMBER(2)
+ DEPARTMENT                                         VARCHAR2(15)
+
+
+-- 1b-9. Change the credit hours of all courses to 4
+
+SQL> UPDATE course SET credit_hours = 4;
+4 rows updated.
+
+SQL> SELECT * FROM course;
+
+COURSE_NAME                    CID             CREDIT_HOURS DEPARTMENT
+------------------------------ --------------- ------------ ---------------
+Intro to Computer Science      CS1310                     4 CS
+Data Structures                CS3320                     4 CS
+Discrete Mathematics           MATH2410                   4 MATH
+Database                       CS3380                     4 CS
+
+4 rows selected.
+
+
+-- 1b-10. Put a NOT NULL constraint on branch in student
+
+SQL> ALTER TABLE student MODIFY branch NOT NULL;
+Table altered.
+
+SQL> DESC student;
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ NAME                                               VARCHAR2(20)
+ STUDENT_NUMBER                            NOT NULL NUMBER(3)
+ CLASS                                              NUMBER(1)
+ BRANCH                                    NOT NULL VARCHAR2(10)
+
+
+-- 1b-11. Rename the student table to pupil
+
+SQL> ALTER TABLE student RENAME TO pupil;
+Table altered.
+
+
+-- 1b-12. Remove the student table (it is now named pupil, so this gives an error)
+
+SQL> DROP TABLE student;
+DROP TABLE student
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+-- 1b-13. Remove the rows of the 'Fall' semester in section
+
+SQL> DELETE FROM section WHERE semester = 'Fall';
+5 rows deleted.
+
+SQL> SELECT * FROM section;
+
+SECTION_IDENTIFIER COURSE_NUMBER   SEMESTER   YEAR INSTRUCTOR
+------------------ --------------- ---------- ---- ---------------
+               102 CS3320          Spring     08   Knuth
+
+1 row selected.
+
+
+-- 1b-14. Remove the row of 'Data Structures' in course
+
+SQL> DELETE FROM course WHERE course_name = 'Data Structures';
+1 row deleted.
+
+SQL> SELECT * FROM course;
+
+COURSE_NAME                    CID             CREDIT_HOURS DEPARTMENT
+------------------------------ --------------- ------------ ---------------
+Intro to Computer Science      CS1310                     4 CS
+Discrete Mathematics           MATH2410                   4 MATH
+Database                       CS3380                     4 CS
+
+3 rows selected.
+
+SQL> COMMIT;
+Commit complete.
+
+
+-- 1b-15. Remove all rows of all tables using TRUNCATE
+
+SQL> TRUNCATE TABLE grade_report;
+Table truncated.
+
+SQL> TRUNCATE TABLE prerequisite;
+Table truncated.
+
+SQL> TRUNCATE TABLE pupil CASCADE;
+Table truncated.
+
+SQL> TRUNCATE TABLE section CASCADE;
+Table truncated.
+
+SQL> TRUNCATE TABLE course CASCADE;
+Table truncated.
+
+
+-- 1b-16. Remove pupil, course and section so that they stay in the recycle bin
+
+SQL> DROP TABLE pupil CASCADE CONSTRAINTS;
+Table dropped.
+
+SQL> DROP TABLE course CASCADE CONSTRAINTS;
+Table dropped.
+
+SQL> DROP TABLE section CASCADE CONSTRAINTS;
+Table dropped.
+
+SQL> SHOW RECYCLEBIN;
+
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+PUPIL            BIN$aB3xK9dQTr2mZ0pLwE5cNg==$0 TABLE        2026-10-02:10:15:21
+COURSE           BIN$Yq7fH1sVSe+u4RkTz8JdXA==$0 TABLE        2026-10-02:10:15:21
+SECTION          BIN$m2LcP6wUQJ6hD3oBn0vYtw==$0 TABLE        2026-10-02:10:15:21
+
+
+-- 1b-17. Remove grade_report and prerequisite tables permanently
+
+SQL> DROP TABLE grade_report PURGE;
+Table dropped.
+
+SQL> DROP TABLE prerequisite PURGE;
+Table dropped.
+
+SQL> SELECT table_name FROM user_tables;
+no rows selected
